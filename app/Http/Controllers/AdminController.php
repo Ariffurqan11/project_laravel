@@ -11,16 +11,18 @@ class AdminController extends Controller
 
     public function home()
     {
-        return view('home.index');
+        $room = Room::all();
+        return view('home.index', compact('room'));
     }
 
 
     public function index()
     {
+        $room = Room::all();
         if (Auth::id()) {
             $usertype = Auth()->user()->usertype;
             if ($usertype == 'user') {
-                return view('home.index');
+                return view('home.index', compact('room'));
             } else if ($usertype == 'admin') {
                 return view('admin.index');
             } else {
@@ -57,5 +59,36 @@ class AdminController extends Controller
     {
         $data = Room::all();
         return view('admin.data_kamar', compact('data'));
+    }
+
+    public function kamar_update($id)
+    {
+        $data = Room::find($id);
+        return view('admin.update_kamar', compact('data'));
+    }
+
+    public function edit_kamar(Request $request, $id)
+    {
+        $data = Room::find($id);
+        $data->nama_kamar = $request->kamar;
+        $data->deskripsi = $request->desk;
+        $data->harga = $request->harga;
+        $data->wifi = $request->wifi;
+        $data->type_kamar = $request->type;
+        $gambar = $request->gambar;
+        if ($gambar) {
+            $gambarnama = time() . '.' . $gambar->getClientOriginalExtension();
+            $request->gambar->move('room', $gambarnama);
+            $data->gambar = $gambarnama;
+        }
+        $data->save();
+        return redirect('data_kamar')->with('success', 'Kamar berhasil diupdate');
+    }
+
+    public function kamar_delete($id)
+    {
+        $data = Room::find($id);
+        $data->delete();
+        return redirect()->back()->with('succes', 'kamar berhasil dihapus');
     }
 }

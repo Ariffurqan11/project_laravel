@@ -77,6 +77,8 @@
                             <th scope="col">Wifi</th>
                             <th scope="col">Type Kamar</th>
                             <th scope="col">Gambar</th>
+                            <th scope="col">Update</th>
+                            <th scope="col">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,6 +97,15 @@
                                 <td>{{ $data->type_kamar }}</td>
                                 <td>
                                     <img src="room/{{ $data->gambar }}" alt="" width="75">
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-warning"
+                                        href="{{ url('kamar_update', $data->id) }}">Update</a>
+                                </td>
+                                <td>
+                                    <a onclick="return confirm('apakah ingin menghapus.')"
+                                        href="{{ url('kamar_delete', $data->id) }}"
+                                        class="btn btn-outline-danger">Delete</a>
                                 </td>
                             </tr>
                         @endforeach
